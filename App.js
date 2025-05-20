@@ -18,6 +18,31 @@ export default function App() {
   const [posicaoBotao, setPosicaoBotao] = useState({ top: 100, left: 100 });
   const [botaoVisivel, setBotaoVisivel] = useState(false);
   const [inicioClique, setInicioClique] = useState(null);
+  const [nomeJogador, setNomeJogador] = useState('');
+  const [ranking, setRanking] = useState([]);
+  const temporizadorJogo = useRef(null);
+  const temporizadorBotao = useRef(null);
+
+  const iniciarJogo = () => {
+    setPontuacao(0);
+    setTempoRestante(30);
+    setTela('jogo');
+    mostrarNovoBotao();
+    setInicioClique(Date.now());
+
+    temporizadorJogo.current = setInterval(() => {
+      setTempoRestante((anterior) => {
+        if (anterior <= 1) {
+          clearInterval(temporizadorJogo.current);
+          clearTimeout(temporizadorBotao.current);
+          setBotaoVisivel(false);
+          setTimeout(() => setTela('resultado'), 500);
+          return 0;
+        }
+        return anterior - 1;
+      });
+    }, 1000);
+  };
 
   const aoClicarBotao = () => {
     const tempoReacao = Date.now() - inicioClique;
@@ -51,6 +76,27 @@ export default function App() {
         <Button title="Como Jogar" onPress={() => setTela('instrucoes')} />
         <Button title="Ranking" onPress={() => setTela('ranking')} />
         <Button title="Sobre" onPress={() => setTela('sobre')} />
+      </View>
+    );
+  }
+
+  if (tela === 'ranking') {
+    return (
+      <View style={estilos.container}>
+        <Text style={estilos.titulo}>🏆 Ranking</Text>
+        {ranking.length === 0 && (
+          <Text style={estilos.texto}>Nenhum registro ainda.</Text>
+        )}
+        <FlatList
+          data={ranking}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <Text style={estilos.texto}>
+              {index + 1}. {item.nome} - {item.pontuacao} pts
+            </Text>
+          )}
+        />
+        <Button title="Voltar" onPress={() => setTela('menu')} />
       </View>
     );
   }
