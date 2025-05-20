@@ -23,6 +23,17 @@ export default function App() {
     );
   }
 
+  if (tela === 'instrucoes') {
+    return (
+      <View style={estilos.container}>
+        <Text style={estilos.titulo}>📘 Como Jogar</Text>
+        <Text style={estilos.texto}>
+          Toque no botão o mais rápido possível quando ele aparecer. Quanto mais rápido, mais pontos você ganha! O botão desaparece em 2 segundos!
+        </Text>
+        <Button title="Voltar" onPress={() => setTela('menu')} />
+      </View>
+    );
+  }
 
   if (tela === 'sobre') {
     return (
