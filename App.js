@@ -80,6 +80,22 @@ export default function App() {
     );
   }
 
+  if (tela === 'resultado') {
+    return (
+      <View style={estilos.container}>
+        <Text style={estilos.titulo}>✅ Fim de Jogo</Text>
+        <Text style={estilos.texto}>Sua pontuação: {pontuacao}</Text>
+        <TextInput
+          style={estilos.input}
+          placeholder="Digite seu nome"
+          value={nomeJogador}
+          onChangeText={setNomeJogador}
+        />
+        <Button title="Salvar no Ranking" onPress={salvarNoRanking} />
+      </View>
+    );
+  }
+
   if (tela === 'ranking') {
     return (
       <View style={estilos.container}>
