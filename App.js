@@ -4,12 +4,31 @@ import {
   Text,
   Button,
   Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Vibration,
+  TextInput,
+  FlatList,
 } from 'react-native';
 
 export default function App() {
   const [tela, setTela] = useState('menu'); // menu, jogo, instrucoes, sobre, resultado, ranking
+  const [pontuacao, setPontuacao] = useState(0);
+  const [tempoRestante, setTempoRestante] = useState(30);
+  const [posicaoBotao, setPosicaoBotao] = useState({ top: 100, left: 100 });
+  const [botaoVisivel, setBotaoVisivel] = useState(false);
+  const [inicioClique, setInicioClique] = useState(null);
 
-
+  const aoClicarBotao = () => {
+    const tempoReacao = Date.now() - inicioClique;
+    const pontos = Math.max(0, Math.floor(1000 - tempoReacao));
+    setPontuacao((anterior) => anterior + pontos);
+    Vibration.vibrate(100);
+    setBotaoVisivel(false);
+    clearTimeout(temporizadorBotao.current);
+    mostrarNovoBotao();
+  };
+  
   const mostrarNovoBotao = () => {
     const top = Math.random() * (height - 200);
     const left = Math.random() * (width - 150);
