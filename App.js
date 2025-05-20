@@ -170,4 +170,34 @@ export default function App() {
   return null;
 }
 
+const estilos = StyleSheet.create({
+  centro: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 10,
+  },
+  container: {
+    flex: 1,
+    padding: 20,
+    justifyContent: 'center',
+  },
+  titulo: {
+    fontSize: 26,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  texto: {
+    fontSize: 18,
+    marginVertical: 6,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    marginVertical: 12,
+    borderRadius: 6,
+  }
+});
+
 
