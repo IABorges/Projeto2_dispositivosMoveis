@@ -10,6 +10,7 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
+const { width, height } = Dimensions.get('window');
 
 export default function App() {
   const [tela, setTela] = useState('menu'); // menu, jogo, instrucoes, sobre, resultado, ranking
@@ -66,8 +67,17 @@ export default function App() {
       mostrarNovoBotao();
     }, 2000);
   };
+    const salvarNoRanking = () => {
+    const entrada = { nome: nomeJogador || 'Anônimo', pontuacao };
+    setRanking((anterior) =>
+      [...anterior, entrada]
+        .sort((a, b) => b.pontuacao - a.pontuacao)
+        .slice(0, 10)
+    );
+    setNomeJogador('');
+    setTela('menu');
+  };
 
-  // Telas
   if (tela === 'menu') {
     return (
       <View style={estilos.centro}>
