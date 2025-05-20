@@ -10,6 +10,19 @@ export default function App() {
   const [tela, setTela] = useState('menu'); // menu, jogo, instrucoes, sobre, resultado, ranking
 
 
+  const mostrarNovoBotao = () => {
+    const top = Math.random() * (height - 200);
+    const left = Math.random() * (width - 150);
+    setPosicaoBotao({ top, left });
+    setBotaoVisivel(true);
+    setInicioClique(Date.now());
+
+    temporizadorBotao.current = setTimeout(() => {
+      setBotaoVisivel(false);
+      mostrarNovoBotao();
+    }, 2000);
+  };
+
   // Telas
   if (tela === 'menu') {
     return (
@@ -21,6 +34,26 @@ export default function App() {
         <Button title="Sobre" onPress={() => setTela('sobre')} />
       </View>
     );
+  }
+
+  if (tela === 'jogo') {
+    return (
+      <View style={estilos.areaJogo}>
+        <Text style={estilos.status}>⏱️ Tempo: {tempoRestante}s</Text>
+        <Text style={estilos.status}>🎯 Pontos: {pontuacao}</Text>
+        {botaoVisivel && (
+          <TouchableOpacity
+            style={[
+              estilos.botaoJogo,
+              { top: posicaoBotao.top, left: posicaoBotao.left },
+            ]}
+            onPress={aoClicarBotao}>
+            <Text style={{ fontSize: 24 }}>🎯</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    );
+
   }
 
   if (tela === 'instrucoes') {
