@@ -197,7 +197,24 @@ const estilos = StyleSheet.create({
     padding: 10,
     marginVertical: 12,
     borderRadius: 6,
-  }
+  },
+   areaJogo: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  botaoJogo: {
+    position: 'absolute',
+    backgroundColor: '#4CAF50',
+    padding: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  status: {
+    fontSize: 18,
+    margin: 10,
+    textAlign: 'center',
+  },
 });
 
 
