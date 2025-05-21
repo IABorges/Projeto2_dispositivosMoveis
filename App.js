@@ -1,4 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { Audio } from 'expo-av';
+import { SafeAreaView } from 'react-native';
+import somMP3 from './assets/button-3.mp3';
+import somWav from './assets/goodResult.wav';
+import { ref, push, query, orderByChild, limitToLast, get } from 'firebase/database';
+import { database } from './firebaseConfig';
+
 import {
   View,
   Text,
@@ -10,9 +17,10 @@ import {
   TextInput,
   FlatList,
 } from 'react-native';
-const { width, height } = Dimensions.get('window');
 
+const { width, height } = Dimensions.get('window');
 export default function App() {
+
   const [tela, setTela] = useState('menu'); // menu, jogo, instrucoes, sobre, resultado, ranking
   const [pontuacao, setPontuacao] = useState(0);
   const [tempoRestante, setTempoRestante] = useState(30);
@@ -23,6 +31,31 @@ export default function App() {
   const [ranking, setRanking] = useState([]);
   const temporizadorJogo = useRef(null);
   const temporizadorBotao = useRef(null);
+  const somClique = useRef(null);
+  const [somCarregado, setSomCarregado] = useState(false);
+  
+  
+
+
+  useEffect(() => {
+    const buscarRanking = async () => {
+      try {
+        const rankingRef = query(ref(database, 'ranking/'), orderByChild('pontuacao'), limitToLast(10));
+        const snapshot = await get(rankingRef);
+
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          const lista = Object.values(data)
+            .sort((a, b) => b.pontuacao - a.pontuacao);
+          setRanking(lista);
+        }
+      } catch (error) {
+        console.log('Erro ao buscar ranking:', error);
+      }
+    };
+
+    buscarRanking();
+  }, []);
 
   const iniciarJogo = () => {
     setPontuacao(0);
@@ -37,6 +70,7 @@ export default function App() {
           clearInterval(temporizadorJogo.current);
           clearTimeout(temporizadorBotao.current);
           setBotaoVisivel(false);
+          Vibration.vibrate(500);
           setTimeout(() => setTela('resultado'), 500);
           return 0;
         }
@@ -45,11 +79,20 @@ export default function App() {
     }, 1000);
   };
 
-  const aoClicarBotao = () => {
+  const aoClicarBotao = async () => {
     const tempoReacao = Date.now() - inicioClique;
     const pontos = Math.max(0, Math.floor(1000 - tempoReacao));
     setPontuacao((anterior) => anterior + pontos);
     Vibration.vibrate(100);
+
+    if (somCarregado && somClique.current) {
+      try {
+        await somClique.current.replayAsync();
+      } catch (e) {
+        console.log('Erro ao reproduzir som:', e);
+      }
+    }
+
     setBotaoVisivel(false);
     clearTimeout(temporizadorBotao.current);
     mostrarNovoBotao();
@@ -67,15 +110,16 @@ export default function App() {
       mostrarNovoBotao();
     }, 2000);
   };
-    const salvarNoRanking = () => {
+  const salvarNoRanking = async () => {
     const entrada = { nome: nomeJogador || 'Anônimo', pontuacao };
-    setRanking((anterior) =>
-      [...anterior, entrada]
-        .sort((a, b) => b.pontuacao - a.pontuacao)
-        .slice(0, 10)
-    );
-    setNomeJogador('');
-    setTela('menu');
+
+    try {
+      await push(ref(database, 'ranking/'), entrada);
+      setNomeJogador('');
+      setTela('menu');
+    } catch (error) {
+      console.log('Erro ao salvar no Firebase:', error);
+    }
   };
 
   if (tela === 'menu') {
@@ -129,7 +173,7 @@ export default function App() {
 
   if (tela === 'jogo') {
     return (
-      <View style={estilos.areaJogo}>
+      <SafeAreaView style={estilos.areaJogo}>
         <Text style={estilos.status}>⏱️ Tempo: {tempoRestante}s</Text>
         <Text style={estilos.status}>🎯 Pontos: {pontuacao}</Text>
         {botaoVisivel && (
@@ -142,7 +186,7 @@ export default function App() {
             <Text style={{ fontSize: 24 }}>🎯</Text>
           </TouchableOpacity>
         )}
-      </View>
+      </SafeAreaView>
     );
 
   }
@@ -211,6 +255,7 @@ const estilos = StyleSheet.create({
    areaJogo: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingTop: 30,
   },
   botaoJogo: {
     position: 'absolute',
