@@ -1,0 +1,9 @@
+ReflexMaster é um aplicativo interativo desenvolvido com a finalidade de mensurar a agilidade e os reflexos motores dos usuários por meio de uma interface simples e responsiva. O projeto foi implementado utilizando o framework React Native, com suporte do ambiente Expo, e emprega conceitos de programação assíncrona, manipulação de estado e integração com serviços em nuvem.
+
+A aplicação apresenta um jogo de curta duração (30 segundos), no qual o usuário deve reagir rapidamente ao surgimento de um botão em posições aleatórias na tela. Cada resposta correta, dentro do tempo limite, resulta em uma pontuação proporcional à velocidade de reação. Ao final da rodada, o jogador tem a opção de inserir seu nome e registrar sua pontuação em um sistema de ranking.
+
+Para armazenamento persistente das pontuações, foi utilizada a plataforma Firebase Realtime Database, permitindo leitura e gravação de dados em tempo real. A comunicação com o banco de dados é realizada por meio das funções push e get, importadas da biblioteca firebase/database, garantindo a sincronização dos dados e atualização dinâmica do ranking com os dez melhores resultados.
+
+No aspecto visual, a interface foi construída com o uso de componentes do react-native, contando com o pacote expo-linear-gradient para aplicação de fundos gradientes e expo-av para gerenciamento de efeitos sonoros. O design prioriza uma experiência intuitiva, responsiva e com apelo visual, adequada ao contexto lúdico da aplicação.
+
+O projeto visa, além do entretenimento, demonstrar habilidades em desenvolvimento de aplicações móveis com armazenamento remoto, manipulação de estados em tempo real, estilização customizada e uso de bibliotecas multimídia. Dessa forma, o ReflexMaster se configura como um exemplo prático de aplicação dos conhecimentos adquiridos na área de Desenvolvimento Mobile e Engenharia de Software.
